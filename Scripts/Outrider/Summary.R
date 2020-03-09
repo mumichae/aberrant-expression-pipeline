@@ -33,6 +33,8 @@ suppressPackageStartupMessages({
     library(ggthemes)
 })
 
+ae_params <- snakemake@config$aberrantExpression
+
 # used for most plots
 dataset_title <- paste("Dataset:", snakemake@wildcards$dataset)
 
@@ -52,7 +54,9 @@ plotEncDimSearch(ods) +
 
 
 #' ### Aberrant samples
-plotAberrantPerSample(ods, main = dataset_title)
+plotAberrantPerSample(ods, main = dataset_title, 
+                      padjCutoff = ae_params$padjCutoff,
+                      zScoreCutoff = ae_params$zScoreCutoff)
 
 
 #' ### Batch correction

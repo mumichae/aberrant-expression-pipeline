@@ -23,6 +23,8 @@ suppressPackageStartupMessages({
     library(OUTRIDER)
 })
 
+ae_params <- snakemake@config$aberrantExpression
+
 ods <- readRDS(snakemake@input$ods)
 res <- results(ods, all = TRUE)
 
@@ -33,8 +35,8 @@ res[, foldChange := round(2^l2fc, 2)]
 saveRDS(res, snakemake@output$results_all)
 
 # Subset to significant results
-res <- res[padjust <= snakemake@config$aberrantExpression$padjCutoff & 
-               abs(zScore) > snakemake@config$aberrantExpression$zScoreCutoff]
+res <- res[padjust <= ae_params$padjCutoff & 
+               abs(zScore) > ae_params$zScoreCutoff]
 
 # Save results 
 fwrite(res, snakemake@output$results, sep = "\t", quote = F)
