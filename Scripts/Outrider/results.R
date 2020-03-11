@@ -6,6 +6,7 @@
 #'   - tmpdir: '`sm drop.getMethodPath(METHOD, "tmp_dir")`'
 #'  input:
 #'   - ods: '`sm parser.getProcResultsDir() + "/aberrant_expression/{annotation}/outrider/{dataset}/ods.Rds"`'
+#'   - gene_name_mapping: '`sm parser.getProcDataDir() + "/aberrant_expression/{annotation}/gene_name_mapping_{annotation}.tsv"`'
 #'  output:
 #'   - results: '`sm parser.getProcResultsDir() + "/aberrant_expression/{annotation}/outrider/{dataset}/OUTRIDER_results.tsv"`'
 #'   - results_all: '`sm parser.getProcResultsDir() + "/aberrant_expression/{annotation}/outrider/{dataset}/OUTRIDER_results_all.Rds"`'
@@ -23,6 +24,8 @@ suppressPackageStartupMessages({
     library(OUTRIDER)
 })
 
+source("../helpers/add_HPO_cols.R")
+
 ae_params <- snakemake@config$aberrantExpression
 
 ods <- readRDS(snakemake@input$ods)
@@ -37,6 +40,24 @@ saveRDS(res, snakemake@output$results_all)
 # Subset to significant results
 res <- res[padjust <= ae_params$padjCutoff & 
                abs(zScore) > ae_params$zScoreCutoff]
+
+gene_annot_dt <- fread(snakemake@input$gene_name_mapping)
+if(!is.null(gene_annot_dt$gene_name)){
+  if(grepl('ENSG00', res[1,geneID]) & grepl('ENSG00', gene_annot_dt[1,gene_id])){
+    res <- merge(res, gene_annot_dt[, .(gene_id, gene_name)], 
+                 by.x = 'geneID', by.y = 'gene_id', sort = FALSE, all.x = TRUE)
+    setnames(res, 'gene_name', 'hgncSymbol')
+    res <- cbind(res[, .(hgncSymbol)], res[, - 'hgncSymbol'])
+  }
+}
+
+# Add HPO terms
+sa <- fread(snakemake@config$sampleAnnotation)
+if(!is.null(sa$HPO_TERMS)){
+  if(!all(is.na(sa$HPO_TERMS))){
+    res <- add_HPO_cols(res)
+  }
+}
 
 # Save results 
 fwrite(res, snakemake@output$results, sep = "\t", quote = F)
