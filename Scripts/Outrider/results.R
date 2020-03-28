@@ -53,7 +53,7 @@ if(!is.null(gene_annot_dt$gene_name)){
 
 # Add HPO terms
 sa <- fread(snakemake@config$sampleAnnotation)
-if(!is.null(sa$HPO_TERMS)){
+if(!is.null(sa$HPO_TERMS) & nrow(res) > 0){
   if(!all(is.na(sa$HPO_TERMS))){
     res <- add_HPO_cols(res)
   }
