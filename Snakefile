@@ -16,7 +16,7 @@ rule all:
     input: 
         rules.Index.output, config["htmlOutputPath"] + "/aberrant_expression_readme.html",
         expand(
-            config["htmlOutputPath"] + "/Scripts_Counting_AllDatasets.html",
+            config["htmlOutputPath"] + "/Scripts_Counting_Overview.html",
             annotation=list(config["geneAnnotation"].keys())
         ),
         expand(
