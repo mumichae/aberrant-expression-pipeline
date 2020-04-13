@@ -110,7 +110,7 @@ ggplot(bcv_dt, aes(when, BCV)) +
 res <- fread(snakemake@input$results)
 
 #' Samples with at least one outlier gene: `r res[, uniqueN(sampleID)]`
-
+#'
 #' ### Aberrant samples
 if (nrow(res) > 0) {
     ab_table <- res[AberrantBySample > nrow(ods)/1000, .N, by = .(sampleID)] %>% unique
