@@ -38,14 +38,14 @@ ae_params <- snakemake@config$aberrantExpression
 # used for most plots
 dataset_title <- paste("Dataset:", snakemake@wildcards$dataset)
 
-#' ## Read the ods object
 ods <- readRDS(snakemake@input$ods)
+
 #' Number of samples: `r ncol(ods)`  
-#' Number of genes: `r nrow(ods)`  
+#' Number of expressed genes: `r nrow(ods)`  
 
 #'
 #' ## Visualize
-#' ### Parameters
+#' ### Encoding dimension
 plotEncDimSearch(ods) +
     labs(title = dataset_title) +
     theme_cowplot() +
@@ -53,7 +53,7 @@ plotEncDimSearch(ods) +
     scale_color_brewer(palette = "Set1")
 
 
-#' ### Aberrant samples
+#' ### Aberrantly expressed genes per sample
 plotAberrantPerSample(ods, main = dataset_title, 
                       padjCutoff = ae_params$padjCutoff,
                       zScoreCutoff = ae_params$zScoreCutoff)
@@ -77,7 +77,7 @@ plotCountGeneSampleHeatmap(ods, normalized = TRUE, nGenes = 50,
                            bcvQuantile = .95, show_names = 'row')
 
 
-#' ### BCV - Biological Cofficient of Variation
+#' ### BCV - Biological coefficient of variation
 # function to calculate BCV before autoencoder
 estimateThetaWithoutAutoCorrect <- function(ods){
   
@@ -109,8 +109,7 @@ ggplot(bcv_dt, aes(when, BCV)) +
 #' ## Results
 res <- fread(snakemake@input$results)
 
-#' ### How many samples with at least one gene
-res[, uniqueN(sampleID)]
+#' Samples with at least one outlier gene: `r res[, uniqueN(sampleID)]`
 
 #' ### Aberrant samples
 if (nrow(res) > 0) {
@@ -132,7 +131,7 @@ res[, pValue := format(pValue, scientific = T, digits = 2)]
 res[, padjust := format(padjust, scientific = T, digits = 2)]
 DT::datatable(res, caption = "OUTRIDER results", style = 'bootstrap', filter = 'top')
 
-#' ### Download Aberrant Samples Table
+#' ### Download results table
 web_dir <- snakemake@config$webDir
 if (!is.null(web_dir)) {
     results_link <- paste0(web_dir, 

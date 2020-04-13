@@ -1,6 +1,6 @@
 #'---
 #' title: "Counts Summary: `r gsub('_', ' ', snakemake@wildcards$dataset)`"
-#' author: Daniela Andrade, Michaela Mueller
+#' author: 
 #' wb:
 #'  params:
 #'    - tmpdir: '`sm drop.getMethodPath(METHOD, "tmp_dir")`'
@@ -156,4 +156,4 @@ rank_n <- expressed_genes[expressedGenesRank == .N]
 #' `r as.character(rank_n$expressedGenes)` expressed genes  
 #' `r as.character(rank_n$unionExpressedGenes)` expressed genes (union)  
 #' `r as.character(rank_n$intersectionExpressedGenes)` expressed genes (intersection)  
-#' `r as.character(rank_n$passedFilterGenes)` genes passed filter
+#' `r as.character(rank_n$passedFilterGenes)` genes passed the filter
