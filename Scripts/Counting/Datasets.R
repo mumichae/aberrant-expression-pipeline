@@ -17,9 +17,18 @@
 saveRDS(snakemake, file.path(snakemake@params$tmpdir, "counting_overview.snakemake") )
 # snakemake <- readRDS(".drop/tmp/AE/counting_overview.snakemake")
 
-groups <- names(snakemake@params$ids)
+# Obtain the annotations and datasets
 gene_annotation_names <- names(snakemake@config$geneAnnotation)
-summaries_titles <- paste(gene_annotation_names, groups)
-summaries <- paste('[', summaries_titles ,'](', gsub(snakemake@config$htmlOutputPath, ".", snakemake@input$summaries), ')', sep = '')
-summaries <- paste(summaries, sep = '\n')
-#' Summaries:  `r summaries`
+datasets <- snakemake@config$aberrantExpression$groups
+
+#+ echo=FALSE, results="asis"
+devNull <- sapply(datasets, function(name){
+  sapply(gene_annotation_names, function(version){
+  cat(paste0(
+    "<h1>Dataset: ", name, "</h1>",
+    "<p>",
+    "</br>", "<a href='AberrantExpression/Counting/", version, "/Summary_", name, ".html'   >Count Summary</a>",
+    "</br>", "</p>"
+  ))
+  })
+})

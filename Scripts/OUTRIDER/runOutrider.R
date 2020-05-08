@@ -28,6 +28,7 @@ saveRDS(snakemake, file.path(snakemake@params$tmpdir, "outrider.snakemake"))
 
 ods <- readRDS(snakemake@input$ods)
 implementation <- snakemake@config$aberrantExpression$implementation
+mp <- snakemake@config$aberrantExpression$maxTestedDimensionProportion
 register(MulticoreParam(snakemake@threads))
 
 ## subset filtered and estimate
@@ -36,11 +37,17 @@ ods <- estimateSizeFactors(ods)
 
 ## find optimal encoding dimension
 a <- 5 
-b <- min(ncol(ods), nrow(ods)) / 3   # N/3
-Nsteps <- min(20, ncol(ods)/3, nrow(ods)/3)   # Do at most 20 steps or N/3
+b <- min(ncol(ods), nrow(ods)) / mp   # N/3
+
+maxSteps <- 15
+if(mp < 4){
+    maxSteps <- 20
+}
+
+Nsteps <- min(maxSteps, b)   # Do at most 20 steps or N/3
 # Do unique in case 2 were repeated
 pars_q <- round(exp(seq(log(a),log(b),length.out = Nsteps))) %>% unique
-ods <- findEncodingDim(ods, params = pars_q, lnorm = TRUE, implementation = implementation)
+ods <- findEncodingDim(ods, params = pars_q, implementation = implementation)
 
 ## fit OUTRIDER
 ods <- OUTRIDER(ods, implementation = implementation)
