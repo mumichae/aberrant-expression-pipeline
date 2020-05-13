@@ -19,7 +19,7 @@
 #'   code_download: TRUE
 #'---
 
-saveRDS(snakemake, file.path(snakemake@config$tmpdir, "counting_summary.snakemake") )
+saveRDS(snakemake, file.path(snakemake@config$tmpdir, "AE/counting_summary.snakemake") )
 #snakemake <- readRDS(".drop/tmp/AE/counting_summary.snakemake")
 
 suppressPackageStartupMessages({
@@ -43,6 +43,7 @@ cnts_mtx <- counts(ods, normalized = F)
 #' Compare number of records vs. read counts
 #' 
 bam_coverage <- fread(snakemake@input$bam_cov)
+bam_coverage[, sampleID := as.character(sampleID)]
 coverage_dt <- merge(bam_coverage,
                    data.table(sampleID = colnames(ods),
                               read_count = colSums(cnts_mtx)),
