@@ -5,8 +5,9 @@
 #'  params:
 #'    - tmpdir: '`sm drop.getMethodPath(METHOD, "tmp_dir")`'
 #'  input:
-#'    - summaries: '`sm expand(config["htmlOutputPath"] + "/AberrantExpression/Outrider/{annotation}/Summary_{dataset}.html",
-#'    annotation=config["geneAnnotation"].keys() , dataset=config["aberrantExpression"]["groups"])`'
+#'    - summaries: '`sm expand(config["htmlOutputPath"] + 
+#'                 "/AberrantExpression/Outrider/{annotation}/Summary_{dataset}.html",
+#'                 annotation=config["geneAnnotation"].keys() , dataset=config["aberrantExpression"]["groups"])`'
 #' output:
 #'   html_document:
 #'    code_folding: hide
