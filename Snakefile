@@ -42,7 +42,7 @@ rule bam_stats:
         chrNamesNCBI=$(cut -f2 {input.ucsc2ncbi} | tr '\n' '|')
     
         # identify chromosome format
-        bam_chr=$(samtools idxstats {input.bam} | grep chr | wc -l)
+        bam_chr=$(samtools idxstats {input.bam} | grep chr || true | wc -l)
         if [ $bam_chr -ne 0 ]
         then
             chrNames=$chrNamesUCSC
@@ -54,8 +54,7 @@ rule bam_stats:
         count=$(samtools idxstats {input.bam} | grep -E "^($chrNames)" | \
                 cut -f3 | paste -sd+ - | bc)
                 
-        echo -e "{wildcards.sampleID}\t${{count}}"\
-            > {output}
+        echo -e "{wildcards.sampleID}\t${{count}}" > {output}
         """
 
 rule merge_bam_stats:
