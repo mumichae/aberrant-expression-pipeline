@@ -58,4 +58,14 @@ col_data <- left_join(col_data, sample_anno, by = "RNA_ID")
 rownames(col_data) <- col_data$RNA_ID
 colData(total_counts) <- as(col_data, "DataFrame")
 
+if(snakemake@config$exportCounts == TRUE){
+  dataset <- snakemake@wildcards$dataset
+  path <- file.path(snakemake@config$root, 'processed_data/exported_counts', 
+                    dataset)
+  dir.create(path)
+  fwrite(as.data.table(assay(total_counts), keep.rownames = 'geneID'), 
+         file = file.path(path, paste0('geneCounts_',  dataset, '.tsv.gz')), 
+         quote = FALSE, row.names = FALSE, sep = '\t', compress = 'gzip')
+}
+
 saveRDS(total_counts, snakemake@output$counts)
