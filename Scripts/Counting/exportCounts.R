@@ -8,8 +8,8 @@
 #'    - counts: '`sm parser.getProcDataDir() +
 #'               "/aberrant_expression/{annotation}/outrider/{dataset}/total_counts.Rds"`'
 #'  output:
-#'    - export: '`sm parser.getProcResultsDir() + "/exportedCounts/{annotation}/"
-#'                + "geneCounts_{dataset}.tsv.gz"`'
+#'    - export: '`sm parser.getProcResultsDir() + "/exported_counts/{dataset}/"
+#'                + "geneCounts_{annotation}.tsv.gz"`'
 #'  type: script
 #'---
 
