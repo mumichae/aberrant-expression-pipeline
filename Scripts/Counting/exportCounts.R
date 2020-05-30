@@ -9,7 +9,7 @@
 #'               "/aberrant_expression/{annotation}/outrider/{dataset}/total_counts.Rds"`'
 #'  output:
 #'    - export: '`sm parser.getProcResultsDir() + "/exported_counts/{dataset}/"
-#'                + "geneCounts_{annotation}.tsv.gz"`'
+#'                + "geneCounts_{dataset}--{annotation}.tsv.gz"`'
 #'  type: script
 #'---
 
