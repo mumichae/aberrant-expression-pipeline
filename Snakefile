@@ -44,8 +44,8 @@ rule bam_stats:
         chrNamesNCBI=$(cut -f2 {input.ucsc2ncbi} | tr '\n' '|')
     
         # identify chromosome format
-        bam_chr=$({params.samtools} idxstats {input.bam} | grep chr || true | wc -l)
-        if [ $bam_chr -ne 0 ]
+        ucsc_count=$({params.samtools} idxstats {input.bam} | grep "^chr" -cP)
+        if [ $ucsc_count -gt 0 ];
         then
             chrNames=$chrNamesUCSC
         else
