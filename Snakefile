@@ -36,10 +36,12 @@ rule bam_stats:
     output:
         parser.getProcDataDir() + 
             "/aberrant_expression/{annotation}/coverage/{sampleID}.tsv"
+    params:
+        samtools = config["tools"]["samtoolsCmd"]
     shell:
         """
         # identify chromosome format
-        if samtools idxstats {input.bam} | grep -qP "^chr";
+        if {params.samtools} idxstats {input.bam} | grep -qP "^chr";
         then
             chrNames=$(cut -f1 {input.ucsc2ncbi} | tr '\n' '|')
         else
@@ -47,7 +49,7 @@ rule bam_stats:
         fi
 
         # write coverage from idxstats into file
-        count=$(samtools idxstats {input.bam} | grep -E "^($chrNames)" | \
+        count=$({params.samtools} idxstats {input.bam} | grep -E "^($chrNames)" | \
                 cut -f3 | paste -sd+ - | bc)
 
         echo -e "{wildcards.sampleID}\t${{count}}" > {output}
