@@ -5,7 +5,7 @@ import pathlib
 import pandas as pd
 
 METHOD = 'AE'
-SCRIPT_ROOT = pathlib.Path() #drop.getMethodPath(METHOD, type_='workdir')
+SCRIPT_ROOT = drop.getMethodPath(METHOD, type_='workdir')
 CONF_FILE = drop.getConfFile()
 
 parser = drop.config(config, METHOD)
