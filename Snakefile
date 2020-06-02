@@ -38,21 +38,18 @@ rule bam_stats:
             "/aberrant_expression/{annotation}/coverage/{sampleID}.tsv"
     shell:
         """
-        chrNamesUCSC=$(cut -f1 {input.ucsc2ncbi} | tr '\n' '|')
-        chrNamesNCBI=$(cut -f2 {input.ucsc2ncbi} | tr '\n' '|')
-    
         # identify chromosome format
-        if if samtools idxstats {input.bam} | grep "^chr" -qP;
+        if samtools idxstats {input.bam} | grep -qP "^chr";
         then
-            chrNames=$chrNamesUCSC
+            chrNames=$(cut -f1 {input.ucsc2ncbi} | tr '\n' '|')
         else
-            chrNames=$chrNamesNCBI
+            chrNames=$(cut -f2 {input.ucsc2ncbi} | tr '\n' '|')
         fi
-    
+
         # write coverage from idxstats into file
         count=$(samtools idxstats {input.bam} | grep -E "^($chrNames)" | \
                 cut -f3 | paste -sd+ - | bc)
-                
+
         echo -e "{wildcards.sampleID}\t${{count}}" > {output}
         """
 
