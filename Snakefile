@@ -5,7 +5,7 @@ import pathlib
 import pandas as pd
 
 METHOD = 'AE'
-SCRIPT_ROOT = pathlib.Path() #drop.getMethodPath(METHOD, type_='workdir')
+SCRIPT_ROOT = drop.getMethodPath(METHOD, type_='workdir', str_=False)
 CONF_FILE = drop.getConfFile()
 
 parser = drop.config(config, METHOD)
@@ -36,23 +36,22 @@ rule bam_stats:
     output:
         parser.getProcDataDir() + 
             "/aberrant_expression/{annotation}/coverage/{sampleID}.tsv"
+    params:
+        samtools = config["tools"]["samtoolsCmd"]
     shell:
         """
-        chrNamesUCSC=$(cut -f1 {input.ucsc2ncbi} | tr '\n' '|')
-        chrNamesNCBI=$(cut -f2 {input.ucsc2ncbi} | tr '\n' '|')
-    
         # identify chromosome format
-        if if samtools idxstats {input.bam} | grep "^chr" -qP;
+        if {params.samtools} idxstats {input.bam} | grep -qP "^chr";
         then
-            chrNames=$chrNamesUCSC
+            chrNames=$(cut -f1 {input.ucsc2ncbi} | tr '\n' '|')
         else
-            chrNames=$chrNamesNCBI
+            chrNames=$(cut -f2 {input.ucsc2ncbi} | tr '\n' '|')
         fi
-    
+
         # write coverage from idxstats into file
-        count=$(samtools idxstats {input.bam} | grep -E "^($chrNames)" | \
+        count=$({params.samtools} idxstats {input.bam} | grep -E "^($chrNames)" | \
                 cut -f3 | paste -sd+ - | bc)
-                
+
         echo -e "{wildcards.sampleID}\t${{count}}" > {output}
         """
 
