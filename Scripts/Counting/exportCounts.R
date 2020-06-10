@@ -1,6 +1,6 @@
 #'---
 #' title: Export counts in tsv format
-#' author: Michaela Müller
+#' author: Michaela Mueller, vyepez
 #' wb:
 #'  params:
 #'    - tmpdir: '`sm drop.getMethodPath(METHOD, "tmp_dir")`'
@@ -8,8 +8,8 @@
 #'    - counts: '`sm parser.getProcDataDir() +
 #'               "/aberrant_expression/{annotation}/outrider/{dataset}/total_counts.Rds"`'
 #'  output:
-#'    - export: '`sm parser.getProcResultsDir() + "/exported_counts/{dataset}/"
-#'                + "geneCounts_{dataset}--{annotation}.tsv.gz"`'
+#'    - export: '`sm parser.getProcResultsDir() + "/exported_counts/{dataset}--{genomeAssembly}--{annotation}/"
+#'                + "geneCounts.tsv.gz"`'
 #'  type: script
 #'---
 
