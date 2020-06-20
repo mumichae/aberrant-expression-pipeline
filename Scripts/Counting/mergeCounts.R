@@ -57,6 +57,7 @@ sample_anno[, RNA_ID := as.character(RNA_ID)]
 col_data <- left_join(col_data, sample_anno, by = "RNA_ID")
 rownames(col_data) <- col_data$RNA_ID
 colData(total_counts) <- as(col_data, "DataFrame")
+rownames(colData(total_counts)) <- colData(total_counts)$RNA_ID
 
 # save in RDS format
 saveRDS(total_counts, snakemake@output$counts)
