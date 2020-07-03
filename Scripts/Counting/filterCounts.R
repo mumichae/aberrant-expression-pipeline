@@ -26,6 +26,7 @@ suppressPackageStartupMessages({
 })
 
 counts <- readRDS(snakemake@input$counts)
+colData(counts)$sampleID <- colData(counts)$RNA_ID
 ods <- OutriderDataSet(counts)
 txdb <- loadDb(snakemake@input$txdb)
 
