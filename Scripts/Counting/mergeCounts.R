@@ -2,19 +2,13 @@
 #' title: Merge the counts for all samples
 #' author: Michaela Müller
 #' wb:
-#'  py:
-#'   - |
-#'    def getCountFiles(annotation, dataset):
-#'        ids = parser.outrider_ids[dataset]
-#'        file_stump = parser.getProcDataDir() + f"/aberrant_expression/{annotation}/counts/"
-#'        return expand(file_stump + "{sampleID}.Rds", sampleID=ids)
 #'  params:
-#'    - ids: '`sm parser.outrider_ids`'
+#'    - ids: '`sm lambda w: sa.getIDsByGroup(w.dataset, assay="RNA")`'
 #'    - tmpdir: '`sm drop.getMethodPath(METHOD, "tmp_dir")`'
 #'  input: 
-#'    - counts: '`sm lambda wildcards: getCountFiles(wildcards.annotation, wildcards.dataset)`'
+#'    - counts: '`sm lambda w: cfg.AE.getCountFiles(w.annotation, w.dataset)`'
 #'  output:
-#'    - counts: '`sm parser.getProcDataDir() +
+#'    - counts: '`sm cfg.getProcessedDataDir() +
 #'               "/aberrant_expression/{annotation}/outrider/{dataset}/total_counts.Rds"`'
 #'  threads: 30
 #'  type: script

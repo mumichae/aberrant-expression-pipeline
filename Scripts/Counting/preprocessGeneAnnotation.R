@@ -5,12 +5,12 @@
 #'  params:
 #'   - tmpdir: '`sm drop.getMethodPath(METHOD, "tmp_dir")`'
 #'  input:
-#'   - gtf: '`sm lambda wildcards: parser.getGeneAnnotationFile(wildcards.annotation) `'
+#'   - gtf: '`sm lambda wildcards: cfg.getGeneAnnotationFile(wildcards.annotation) `'
 #'  output:
-#'   - txdb: '`sm parser.getProcDataDir() + "/aberrant_expression/{annotation}/txdb.db"`'
-#'   - count_ranges: '`sm parser.getProcDataDir() + 
+#'   - txdb: '`sm cfg.getProcessedDataDir() + "/aberrant_expression/{annotation}/txdb.db"`'
+#'   - count_ranges: '`sm cfg.getProcessedDataDir() + 
 #'                    "/aberrant_expression/{annotation}/count_ranges.Rds" `'
-#'   - gene_name_mapping: '`sm parser.getProcDataDir() + "/aberrant_expression/{annotation}/gene_name_mapping_{annotation}.tsv"`'
+#'   - gene_name_mapping: '`sm cfg.getProcessedDataDir() + "/aberrant_expression/{annotation}/gene_name_mapping_{annotation}.tsv"`'
 #'  type: script
 #'---
 

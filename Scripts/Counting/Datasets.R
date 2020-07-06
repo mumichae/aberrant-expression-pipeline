@@ -3,12 +3,11 @@
 #' author:  mumichae, salazar
 #' wb:
 #'  params:
-#'   - ids: '`sm parser.outrider_ids`'
 #'   - tmpdir: '`sm drop.getMethodPath(METHOD, "tmp_dir")`'
 #'  input: 
 #'   - summaries: '`sm expand(config["htmlOutputPath"] + 
 #'                "/AberrantExpression/Counting/{annotation}/Summary_{dataset}.html",
-#'                annotation=list(config["geneAnnotation"].keys()), dataset=parser.outrider_ids)`'
+#'                annotation=cfg.getGeneVersions(), dataset=cfg.AE.groups)`'
 #' output:
 #'   html_document:
 #'    code_folding: hide

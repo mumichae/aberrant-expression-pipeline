@@ -5,10 +5,10 @@
 #'  params:
 #'    - tmpdir: '`sm drop.getMethodPath(METHOD, "tmp_dir")`'
 #'  input: 
-#'    - counts: '`sm parser.getProcDataDir() +
+#'    - counts: '`sm cfg.getProcessedDataDir() +
 #'               "/aberrant_expression/{annotation}/outrider/{dataset}/total_counts.Rds"`'
 #'  output:
-#'    - export: '`sm parser.getProcResultsDir() + "/exported_counts/{dataset}--{genomeAssembly}--{annotation}/"
+#'    - export: '`sm cfg.getProcessedResultsDir() + "/exported_counts/{dataset}--{genomeAssembly}--{annotation}/"
 #'                + "geneCounts.tsv.gz"`'
 #'  type: script
 #'---

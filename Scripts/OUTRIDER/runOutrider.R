@@ -5,10 +5,10 @@
 #'  params:
 #'   - tmpdir: '`sm drop.getMethodPath(METHOD, "tmp_dir")`'
 #'  input:
-#'   - ods: '`sm parser.getProcResultsDir() + 
+#'   - ods: '`sm cfg.getProcessedResultsDir() + 
 #'           "/aberrant_expression/{annotation}/outrider/{dataset}/ods_unfitted.Rds"`'
 #'  output:
-#'   - ods: '`sm parser.getProcResultsDir() + 
+#'   - ods: '`sm cfg.getProcessedResultsDir() + 
 #'           "/aberrant_expression/{annotation}/outrider/{dataset}/ods.Rds"`'
 #'  type: script
 #'  threads: 30

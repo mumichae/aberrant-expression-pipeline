@@ -5,9 +5,9 @@
 #'  params:
 #'    - tmpdir: '`sm drop.getMethodPath(METHOD, "tmp_dir")`'
 #'  input: 
-#'    - ods: '`sm parser.getProcResultsDir() +
+#'    - ods: '`sm cfg.getProcessedResultsDir() +
 #'            "/aberrant_expression/{annotation}/outrider/{dataset}/ods_unfitted.Rds"`'
-#'    - bam_cov: '`sm parser.getProcDataDir() +
+#'    - bam_cov: '`sm cfg.getProcessedDataDir() +
 #'                "/aberrant_expression/{annotation}/outrider/{dataset}/bam_coverage.tsv"`'
 #'  output:
 #'   - wBhtml: '`sm config["htmlOutputPath"] +

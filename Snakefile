@@ -1,41 +1,38 @@
 ### SNAKEFILE ABERRANT EXPRESSION
+from pathlib import Path
 import os
 import drop
-import pathlib
-import pandas as pd
+
+cfg = drop.config.DropConfig(config)
+sa = cfg.sampleAnnotation
+config = cfg.config # for legacy
 
 METHOD = 'AE'
 SCRIPT_ROOT = drop.getMethodPath(METHOD, type_='workdir', str_=False)
-CONF_FILE = drop.getConfFile()
+CONF_FILE = drop.getConfFile(METHOD)
 
-parser = drop.config(config, METHOD)
-config = parser.parse()
-include: config['wBuildPath'] + "/wBuild.snakefile"
+include: drop.utils.getWBuildSnakefile()
 
 rule all:
     input: 
         rules.Index.output, config["htmlOutputPath"] + "/aberrant_expression_readme.html",
         expand(
             config["htmlOutputPath"] + "/Scripts_Counting_Datasets.html",
-            annotation=list(config["geneAnnotation"].keys())
+            annotation=cfg.getGeneVersions()
         ),
         expand(
-            parser.getProcResultsDir() + "/aberrant_expression/{annotation}" +
-                "/outrider/{dataset}/OUTRIDER_results.tsv",
-            annotation=list(config["geneAnnotation"].keys()),
-            dataset=parser.outrider_ids
+            cfg.getProcessedResultsDir() + "/aberrant_expression/{annotation}/outrider/{dataset}/OUTRIDER_results.tsv",
+                annotation=cfg.getGeneVersions(), dataset=cfg.AE.groups
         )
     output: touch(drop.getMethodPath(METHOD, type_='final_file'))
 
 
 rule bam_stats:
     input: 
-        bam = lambda wildcards: parser.getFilePath(wildcards.sampleID, 
-                                                   file_type="RNA_BAM_FILE"),
+        bam = lambda wildcards: sa.getFilePath(wildcards.sampleID, "RNA_BAM_FILE"),
         ucsc2ncbi = SCRIPT_ROOT / "resource" / "chr_UCSC_NCBI.txt"
     output:
-        parser.getProcDataDir() + 
-            "/aberrant_expression/{annotation}/coverage/{sampleID}.tsv"
+        cfg.processedDataDir / "aberrant_expression" / "{annotation}" / "coverage" / "{sampleID}.tsv"
     params:
         samtools = config["tools"]["samtoolsCmd"]
     shell:
@@ -57,15 +54,13 @@ rule bam_stats:
 
 rule merge_bam_stats:
     input: 
-        lambda wildcards: expand(
-            parser.getProcDataDir() + 
+        lambda w: expand(cfg.getProcessedDataDir() +
             "/aberrant_expression/{{annotation}}/coverage/{sampleID}.tsv",
-            sampleID=parser.outrider_ids[wildcards.dataset])
+            sampleID=sa.getIDsByGroup(w.dataset))
     output:
-        parser.getProcDataDir() + "/aberrant_expression/{annotation}/" +
-            "outrider/{dataset}/bam_coverage.tsv"
+        cfg.getProcessedDataDir() + "/aberrant_expression/{annotation}/outrider/{dataset}/bam_coverage.tsv"
     params:
-        ids = lambda wildcards: parser.outrider_ids[wildcards.dataset]
+        ids = lambda w: sa.getIDsByGroup(w.dataset)
     run:
         with open(output[0], "w") as bam_stats:
             bam_stats.write("sampleID\trecord_count\n")
