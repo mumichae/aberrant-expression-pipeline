@@ -28,7 +28,7 @@ register(MulticoreParam(snakemake@threads))
 
 # Read counts
 counts_list <- bplapply(snakemake@input$counts, readRDS)
-names <- snakemake@params$ids[[snakemake@wildcards$dataset]]
+names <- snakemake@params$ids
 names(counts_list) <- names
 
 message(paste("read", length(counts_list), 'files'))

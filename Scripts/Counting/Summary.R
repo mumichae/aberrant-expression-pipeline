@@ -19,7 +19,7 @@
 #'   code_download: TRUE
 #'---
 
-saveRDS(snakemake, file.path(snakemake@config$tmpdir, "AE/counting_summary.snakemake") )
+saveRDS(snakemake, file.path(snakemake@params$tmpdir, "rounting_summary.snakemake") )
 #snakemake <- readRDS(".drop/tmp/AE/counting_summary.snakemake")
 
 suppressPackageStartupMessages({
