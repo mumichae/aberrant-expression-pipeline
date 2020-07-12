@@ -1,36 +1,26 @@
-### SNAKEFILE ABERRANT EXPRESSION
-from pathlib import Path
-import os
-import drop
+WORKDIR = cfg.AE.getWorkdir(str_=False)
+CONF_FILE = drop.getConfFile()
 
-cfg = drop.config.DropConfig(config)
-sa = cfg.sampleAnnotation
-config = cfg.config # for legacy
-
-METHOD = 'AE'
-SCRIPT_ROOT = drop.getMethodPath(METHOD, type_='workdir', str_=False)
-CONF_FILE = drop.getConfFile(METHOD)
-
-include: drop.utils.getWBuildSnakefile()
-
-rule all:
-    input: 
-        rules.Index.output, config["htmlOutputPath"] + "/aberrant_expression_readme.html",
+rule aberrantExpression:
+    input:
+        #config["htmlOutputPath"] + "/aberrant_expression_readme.html",
         expand(
-            config["htmlOutputPath"] + "/Scripts_Counting_Datasets.html",
+            cfg.getHtmlFromScript(WORKDIR / "Counting" / "Datasets.R"),
             annotation=cfg.getGeneVersions()
         ),
         expand(
             cfg.getProcessedResultsDir() + "/aberrant_expression/{annotation}/outrider/{dataset}/OUTRIDER_results.tsv",
                 annotation=cfg.getGeneVersions(), dataset=cfg.AE.groups
+        ),
+        expand(
+            cfg.getHtmlFromScript(WORKDIR / "OUTRIDER" / "Datasets.R"),
+            annotation=cfg.getGeneVersions()
         )
-    output: touch(drop.getMethodPath(METHOD, type_='final_file'))
 
-
-rule bam_stats:
+rule aberrantExpression_bamStats:
     input: 
         bam = lambda wildcards: sa.getFilePath(wildcards.sampleID, "RNA_BAM_FILE"),
-        ucsc2ncbi = SCRIPT_ROOT / "resource" / "chr_UCSC_NCBI.txt"
+        ucsc2ncbi = WORKDIR / "resource" / "chr_UCSC_NCBI.txt"
     output:
         cfg.processedDataDir / "aberrant_expression" / "{annotation}" / "coverage" / "{sampleID}.tsv"
     params:
@@ -52,7 +42,7 @@ rule bam_stats:
         echo -e "{wildcards.sampleID}\t${{count}}" > {output}
         """
 
-rule merge_bam_stats:
+rule aberrantExpression_mergeBamStats:
     input: 
         lambda w: expand(cfg.getProcessedDataDir() +
             "/aberrant_expression/{{annotation}}/coverage/{sampleID}.tsv",
@@ -69,20 +59,12 @@ rule merge_bam_stats:
 
 rulegraph_filename = f'{config["htmlOutputPath"]}/{METHOD}_rulegraph'
 
-rule produce_rulegraph:
-    input:
-        expand(rulegraph_filename + ".{fmt}", fmt=["svg", "png"])
-
-rule create_graph:
+rule aberrantExpression_rulegraph:
     output:
         svg = f"{rulegraph_filename}.svg",
         png = f"{rulegraph_filename}.png"
     shell:
         """
-        snakemake --configfile {CONF_FILE} --rulegraph | dot -Tsvg > {output.svg}
-        snakemake --configfile {CONF_FILE} --rulegraph | dot -Tpng > {output.png}
+        snakemake --configfile {CONF_FILE} aberrantExpression --rulegraph | dot -Tsvg > {output.svg}
+        snakemake --configfile {CONF_FILE} aberrantExpression --rulegraph | dot -Tpng > {output.png}
         """
-rule unlock:
-    output: touch(drop.getMethodPath(METHOD, type_="unlock"))
-    shell: "snakemake --unlock --configfile {CONF_FILE}"
-

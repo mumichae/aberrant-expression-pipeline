@@ -4,6 +4,7 @@
 #' wb:
 #'  params:
 #'   - tmpdir: '`sm drop.getMethodPath(METHOD, "tmp_dir")`'
+#'   - add_HPO_cols: '`sm str(projectDir / ".drop" / "helpers" / "add_HPO_cols.R")`'
 #'  input:
 #'   - ods: '`sm cfg.getProcessedResultsDir() + "/aberrant_expression/{annotation}/outrider/{dataset}/ods.Rds"`'
 #'   - gene_name_mapping: '`sm cfg.getProcessedDataDir() + "/aberrant_expression/{annotation}/gene_name_mapping_{annotation}.tsv"`'
@@ -24,7 +25,7 @@ suppressPackageStartupMessages({
     library(OUTRIDER)
 })
 
-source("../helpers/add_HPO_cols.R")
+source(snakemake@params$add_HPO_cols)
 
 ae_params <- snakemake@config$aberrantExpression
 
