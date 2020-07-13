@@ -2,8 +2,8 @@
 #' title: Export counts in tsv format
 #' author: Michaela Mueller, vyepez
 #' wb:
-#'  params:
-#'    - tmpdir: '`sm drop.getMethodPath(METHOD, "tmp_dir")`'
+#'  log:
+#'   - snakemake: '`sm str(tmp_dir / "AE" / "{annotation}" / "{dataset}" / "export_{genomeAssembly}.Rds")`'
 #'  input: 
 #'    - counts: '`sm cfg.getProcessedDataDir() +
 #'               "/aberrant_expression/{annotation}/outrider/{dataset}/total_counts.Rds"`'
@@ -13,8 +13,7 @@
 #'  type: script
 #'---
 
-saveRDS(snakemake, file.path(snakemake@params$tmpdir, "merge_counts.snakemake"))
-# snakemake <- readRDS(".drop/tmp/AE/merge_counts.snakemake")
+saveRDS(snakemake, snakemake@log$snakemake)
 
 suppressPackageStartupMessages({
     library(data.table)

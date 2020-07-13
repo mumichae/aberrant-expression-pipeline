@@ -2,8 +2,8 @@
 #' title: Counts Overview
 #' author:  mumichae, salazar
 #' wb:
-#'  params:
-#'   - tmpdir: '`sm drop.getMethodPath(METHOD, "tmp_dir")`'
+#'  log:
+#'   - snakemake: '`sm str(tmp_dir / "AE" / "Count_Overview.Rds")`'
 #'  input: 
 #'   - summaries: '`sm expand(config["htmlOutputPath"] + 
 #'                "/AberrantExpression/Counting/{annotation}/Summary_{dataset}.html",
@@ -14,8 +14,7 @@
 #'    code_download: TRUE
 #'---
 
-saveRDS(snakemake, file.path(snakemake@params$tmpdir, "counting_overview.snakemake") )
-# snakemake <- readRDS(".drop/tmp/AE/counting_overview.snakemake")
+saveRDS(snakemake, snakemake@log$snakemake)
 
 # Obtain the annotations and datasets
 gene_annotation_names <- names(snakemake@config$geneAnnotation)

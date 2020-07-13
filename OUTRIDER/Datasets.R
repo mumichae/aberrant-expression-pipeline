@@ -2,20 +2,19 @@
 #' title: Results Overview
 #' author: mumichae
 #' wb:
-#'  params:
-#'    - tmpdir: '`sm drop.getMethodPath(METHOD, "tmp_dir")`'
+#'  log:
+#'   - snakemake: '`sm str(tmp_dir / "AE" / "OUTRIDER_Overview.Rds")`'
 #'  input:
 #'    - summaries: '`sm expand(config["htmlOutputPath"] + 
 #'                 "/AberrantExpression/Outrider/{annotation}/Summary_{dataset}.html",
-#'                 annotation=config["geneAnnotation"].keys() , dataset=config["aberrantExpression"]["groups"])`'
+#'                 annotation=cfg.getGeneVersions(), dataset=cfg.AE.groups)`'
 #' output:
 #'   html_document:
 #'    code_folding: hide
 #'    code_download: TRUE
 #'---
 
-saveRDS(snakemake, file.path(snakemake@params$tmpdir, "outrider_overview.snakemake"))
-# snakemake <- readRDS(".drop/tmp/AE/outrider_overview.snakemake")
+saveRDS(snakemake, snakemake@log$snakemake)
 
 # Obtain the annotations and datasets
 datasets <- snakemake@config$aberrantExpression$groups 

@@ -1,9 +1,7 @@
 WORKDIR = cfg.AE.getWorkdir(str_=False)
-CONF_FILE = drop.getConfFile()
 
 rule aberrantExpression:
     input:
-        #config["htmlOutputPath"] + "/aberrant_expression_readme.html",
         expand(
             cfg.getHtmlFromScript(WORKDIR / "Counting" / "Datasets.R"),
             annotation=cfg.getGeneVersions()
@@ -57,7 +55,7 @@ rule aberrantExpression_mergeBamStats:
             for f in input:
                 bam_stats.write(open(f, "r").read())
 
-rulegraph_filename = f'{config["htmlOutputPath"]}/{METHOD}_rulegraph'
+rulegraph_filename = f'{config["htmlOutputPath"]}/AE_rulegraph'
 
 rule aberrantExpression_rulegraph:
     output:
@@ -65,6 +63,6 @@ rule aberrantExpression_rulegraph:
         png = f"{rulegraph_filename}.png"
     shell:
         """
-        snakemake --configfile {CONF_FILE} aberrantExpression --rulegraph | dot -Tsvg > {output.svg}
-        snakemake --configfile {CONF_FILE} aberrantExpression --rulegraph | dot -Tpng > {output.png}
+        snakemake aberrantExpression --rulegraph | dot -Tsvg > {output.svg}
+        snakemake aberrantExpression --rulegraph | dot -Tpng > {output.png}
         """

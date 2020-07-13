@@ -2,8 +2,8 @@
 #' title: "Counts Summary: `r gsub('_', ' ', snakemake@wildcards$dataset)`"
 #' author: 
 #' wb:
-#'  params:
-#'    - tmpdir: '`sm drop.getMethodPath(METHOD, "tmp_dir")`'
+#'  log:
+#'   - snakemake: '`sm str(tmp_dir / "AE" / "{annotation}" / "{dataset}" / "count_summary.Rds")`'
 #'  input: 
 #'    - ods: '`sm cfg.getProcessedResultsDir() +
 #'            "/aberrant_expression/{annotation}/outrider/{dataset}/ods_unfitted.Rds"`'
@@ -19,8 +19,7 @@
 #'   code_download: TRUE
 #'---
 
-saveRDS(snakemake, file.path(snakemake@params$tmpdir, "rounting_summary.snakemake") )
-#snakemake <- readRDS(".drop/tmp/AE/counting_summary.snakemake")
+saveRDS(snakemake, snakemake@log$snakemake)
 
 suppressPackageStartupMessages({
   library(OUTRIDER)

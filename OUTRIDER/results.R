@@ -2,8 +2,9 @@
 #' title: OUTRIDER Results
 #' author: mumichae
 #' wb:
+#'  log:
+#'   - snakemake: '`sm str(tmp_dir / "AE" / "{annotation}" / "{dataset}" / "OUTRIDER_results.Rds")`'
 #'  params:
-#'   - tmpdir: '`sm drop.getMethodPath(METHOD, "tmp_dir")`'
 #'   - add_HPO_cols: '`sm str(projectDir / ".drop" / "helpers" / "add_HPO_cols.R")`'
 #'  input:
 #'   - ods: '`sm cfg.getProcessedResultsDir() + "/aberrant_expression/{annotation}/outrider/{dataset}/ods.Rds"`'
@@ -14,8 +15,8 @@
 #'  type: script
 #'---
 
-saveRDS(snakemake, file.path(snakemake@params$tmpdir, "outrider_results.snakemake"))
-# snakemake <- readRDS(".drop/tmp/AE/outrider_results.snakemake")
+saveRDS(snakemake, snakemake@log$snakemake)
+source(snakemake@params$add_HPO_cols)
 
 suppressPackageStartupMessages({
     library(dplyr)
@@ -24,8 +25,6 @@ suppressPackageStartupMessages({
     library(SummarizedExperiment)
     library(OUTRIDER)
 })
-
-source(snakemake@params$add_HPO_cols)
 
 ae_params <- snakemake@config$aberrantExpression
 

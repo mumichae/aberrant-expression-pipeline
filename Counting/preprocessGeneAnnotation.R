@@ -2,8 +2,8 @@
 #' title: Preprocess Gene Annotations
 #' author: mumichae
 #' wb:
-#'  params:
-#'   - tmpdir: '`sm drop.getMethodPath(METHOD, "tmp_dir")`'
+#'  log:
+#'   - snakemake: '`sm str(tmp_dir / "AE" / "{annotation}" / "preprocess.Rds")`'
 #'  input:
 #'   - gtf: '`sm lambda wildcards: cfg.getGeneAnnotationFile(wildcards.annotation) `'
 #'  output:
@@ -14,8 +14,7 @@
 #'  type: script
 #'---
 
-saveRDS(snakemake, file.path(snakemake@params$tmpdir, "annotation.snakemake") )
-# snakemake <- readRDS(".drop/tmp/AE/annotation.snakemake")
+saveRDS(snakemake, snakemake@log$snakemake)
 
 suppressPackageStartupMessages({
   library(GenomicFeatures)

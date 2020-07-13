@@ -2,9 +2,10 @@
 #' title: Merge the counts for all samples
 #' author: Michaela Müller
 #' wb:
+#'  log:
+#'   - snakemake: '`sm str(tmp_dir / "AE" / "{annotation}" / "{dataset}" / "merge.Rds")`'
 #'  params:
 #'    - ids: '`sm lambda w: sa.getIDsByGroup(w.dataset, assay="RNA")`'
-#'    - tmpdir: '`sm drop.getMethodPath(METHOD, "tmp_dir")`'
 #'  input: 
 #'    - counts: '`sm lambda w: cfg.AE.getCountFiles(w.annotation, w.dataset)`'
 #'  output:
@@ -14,8 +15,7 @@
 #'  type: script
 #'---
 
-saveRDS(snakemake, file.path(snakemake@params$tmpdir, "merge_counts.snakemake"))
-# snakemake <- readRDS(".drop/tmp/AE/merge_counts.snakemake")
+saveRDS(snakemake, snakemake@log$snakemake)
 
 suppressPackageStartupMessages({
     library(data.table)
